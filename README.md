@@ -3,19 +3,11 @@ Data Science: Inference and Modeling Harvard Course
 
 
 # Statistical Properties of Sample Proportion
-```math
-\text{
-This repository provides a detailed explanation of the statistical properties of the sample proportion } (\bar{X}) \mean{x}. 
-```
-The sample proportion is the mean of independent draws from a random variable and follows the rules of probability.
 
-## Overview
-
-To understand how good our estimate is, we will describe the statistical properties of the sample proportion \(\bar{X}\). Remember that \(\bar{X}\) is the sum of independent draws, so the rules we covered in the probability chapter apply.
 
 ### Expected Value
 
-Using the properties of expected value, the expected value of the sum \(N\bar{X}\) is \(N\) times the average of the urn, \(p\). Dividing by the non-random constant \(N\) gives us the expected value of the average \(\bar{X}\):
+Using the properties of expected value, the expected value of the sum $`\(N\bar{X}\)`$ is \(N\) times the average of the urn, \(p\). Dividing by the non-random constant \(N\) gives us the expected value of the average \(\bar{X}\):
 
 \[ E(\bar{X}) = p \]
 

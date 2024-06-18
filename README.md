@@ -3,8 +3,11 @@ Data Science: Inference and Modeling Harvard Course
 
 
 # Statistical Properties of Sample Proportion
-
-This repository provides a detailed explanation of the statistical properties of the sample proportion \(bar{X}\). The sample proportion is the mean of independent draws from a random variable and follows the rules of probability.
+```math
+\text{
+This repository provides a detailed explanation of the statistical properties of the sample proportion } (bar{X}). 
+```
+The sample proportion is the mean of independent draws from a random variable and follows the rules of probability.
 
 ## Overview
 

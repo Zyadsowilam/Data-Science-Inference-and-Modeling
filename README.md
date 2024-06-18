@@ -98,6 +98,54 @@ For our 25 item sample above, our estimate  p is .48 with margin of error .20 an
 For realistic values of  p, say from 0.35 to 0.65, if we run a very large poll with 100,000 people, theory tells us that we would predict the election perfectly since the largest possible margin of error is around 0.3%
 ![image](https://github.com/Zyadsowilam/Data-Science-Inference-and-Modeling/assets/96208685/3c8714e6-e7b1-4cd2-98d5-65b2b711fa21)
 One reason is that running such a poll is very expensive. Another possibly more important reason is that theory has its limitations. Polling is much more complicated than picking beads from an urn.
+#  Confidence intervals
+![image](https://github.com/Zyadsowilam/Data-Science-Inference-and-Modeling/assets/96208685/75a84864-a2d3-4924-9ab5-d9bfcb31c21b)
+
+
+1. **Creating Confidence Intervals**:
+    - When we repeatedly sample and create intervals, we observe random variation.
+    - To determine the probability that the interval includes ( p ), we need to compute:
+$`[
+      \text{Pr}\left( \bar{X} - 1.96 \cdot \widehat{\text{SE}}(\bar{X}) \leq p \leq \bar{X} + 1.96 \cdot \widehat{\text{SE}}(\bar{X}) \right)
+      ] `$ 
+      
+
+2. **Simplifying the Probability Expression**:
+    - By subtracting  $`( \bar{X} ) `$ and dividing by $`\widehat{\text{SE}}(\bar{X}) ) `$ in all parts of the equation, we simplify it to:
+$` [
+      \text{Pr}\left( -1.96 \leq \frac{\bar{X} - p}{\widehat{\text{SE}}(\bar{X})} \leq 1.96 \right)
+      ] `$
+      
+
+3. **Standard Normal Distribution**:
+    - The term in the middle,$`( \frac{\bar{X} - p}{\widehat{\text{SE}}(\bar{X})} ) `$ , is approximately a normal random variable with expected value 0 and standard error 1. We denote this as  Z .
+    - Therefore, we have:
+    - $` [
+      \text{Pr}\left( -1.96 \leq Z \leq 1.96 \right)
+      ] `$
+     
+    - This shows that there is a 95% probability the interval includes ( p ).
+
+4. **Extending to Other Probabilities**:
+    - For a larger probability, say 99%, we need to determine ( z ) such that:
+$` [
+      \text{Pr}\left( -z \leq Z \leq z \right) = 0.99
+      ] `$
+     
+    - By definition, $`( \text{pnorm}(\text{qnorm}(0.995)) ) `$  is 0.995 and by symmetry, $`( \text{pnorm}(1 - \text{qnorm}(0.995)) )  `$ is 1 - 0.995.
+    - Thus,$` ( \text{Pr}\left( -\text{qnorm}(0.995) \leq Z \leq \text{qnorm}(0.995) \right) = 0.99 ) `$.
+
+5. **Generalizing for Any Probability**:
+    - This approach works for any probability, not just 0.95 and 0.99.
+    - In statistics, this is often written as $` \ 1 - \alpha ) `$.
+    - We can obtain ( z ) for the equation above using$`( z = \text{qnorm}(1 - \alpha / 2) ) `$  because:
+$` [
+      1 - \alpha / 2 - \alpha / 2 = 1 - \alpha
+      ] `$
+     
+    - For example, for $`( \alpha = 0.05 ) `$ , $`( 1 - \alpha / 2 = 0.975 )  `$ and we get the 1.96 value used earlier.
+
+
 # Tasks
 ### Task 1
 Write a line of code that calculates the standard error se of a sample average when you poll 25 people in the population. Generate a sequence of 100 proportions of Democrats p that vary from 0 (no Democrats) to 1 (all Democrats).

@@ -182,6 +182,165 @@ Given a sample $`( X_1, X_2, \ldots, X_N ) `$ drawn from the urn:
 
 ![image](https://github.com/Zyadsowilam/Data-Science-Inference-and-Modeling/assets/96208685/f1b17fa1-32d5-4cf6-bc99-616b5d4b55ae)
 
+
+
+## Bayes' Theorem Application
+
+Bayes' theorem states:
+
+ $`[ \text{Pr}(A \mid B) = \frac{\text{Pr}(B \mid A) \cdot \text{Pr}(A)}{\text{Pr}(B)} ]`$
+In our case:
+
+ $`[ \text{Pr}(D = 1 \mid +) = \frac{\text{Pr}(+ \mid D = 1) \cdot \text{Pr}(D = 1)}{\text{Pr}(+)} ] `$
+Where:
+-  $`( \text{Pr}(+ \mid D = 1) = 0.99 ) `$ (Probability of testing positive given the person has the disease).
+-  $`( \text{Pr}(D = 1) = 0.00025 )`$ (Probability of having the disease).
+-  $`( \text{Pr}(+) ) `$needs to be calculated using the law of total probability:
+   $`[ \text{Pr}(+) = \text{Pr}(+ \mid D = 1) \cdot \text{Pr}(D = 1) + \text{Pr}(+ \mid D = 0) \cdot \text{Pr}(D = 0) ] `$
+ $`  ( \text{Pr}(+ \mid D = 0) \) is 1% (0.01), and \( \text{Pr}(D = 0) = 1 - \text{Pr}(D = 1) = 0.99975 ) `$.
+
+## Calculation
+
+Plugging in the values:
+ $`[ \text{Pr}(D = 1 \mid +) = \frac{0.99 \cdot 0.00025}{0.99 \cdot 0.00025 + 0.01 \cdot 0.99975} \approx 0.02 ]`$
+
+## Interpretation
+
+Despite the test's high accuracy of 99%, the probability of actually having the disease given a positive test result is only around 0.02. This discrepancy arises because the disease is very rare in the population, so even with a highly accurate test, the prior probability of having the disease is low.
+
+
+## Bayesian Formulation
+
+### Prior Distribution
+ $`[ p \sim N(0.275, 0.027^2) ]`$
+
+### Sampling Distribution
+ $`[ Y \mid p \sim N(p, \sigma^2) ]`$
+
+### Posterior Distribution
+
+Using Bayes' theorem, the posterior distribution of \( p \) given the observed data ( Y = y ) is:
+
+ $`[ p \mid Y = y \sim N\left( B\mu + (1-B)y, \sqrt{\frac{\sigma^2 \tau^2}{\sigma^2 + \tau^2}} \right) ]`$
+Where:
+-  $`( B = \frac{\sigma^2}{\sigma^2 + \tau^2} ) `$ is a weighting factor.
+-  $`( \mu = 0.275 )`$ is the population average.
+-  $`( \sigma^2 = \frac{p(1-p)}{N} ) `$is the variance due to batting luck.
+-  $`( \tau = 0.027 )`$ is the standard deviation capturing variation in players' abilities.
+
+### Interpretation
+
+From the computed posterior distribution:
+- The expected value $` ( E(p \mid Y = 0.450) ) `$suggests the player's true ability given the observed average.
+- The standard error  $`( SE(p \mid y) ) `$provides a measure of uncertainty around this estimate.
+- The 95% credible interval gives a range within which the true batting average is likely to fall, considering both prior knowledge and observed data.
+
+
+
+### Bayesian Hierarchical Model
+
+### Prior Distribution
+We assume a hierarchical model similar to those used in other Bayesian applications:
+$` [ d \sim N(\mu, \tau^2) ] `$
+
+-  $` ( \mu ) `$ represents our best guess about ( d ) before any poll data is available.
+- For simplicity, $` ( \mu = 0 ) `$, indicating a neutral stance without additional information favoring any candidate.
+-  $` ( \tau = 0.035  ) `$is the standard deviation based on historical data, reflecting the typical spread in the popular vote results.
+
+### Likelihood
+
+$` [ \bar{X} \mid d \sim N(d, \sigma^2) ] `$
+- $` ( \bar{X} )  `$represents the observed poll results, which are normally distributed around ( d ).
+-  $` ( \sigma^2 ) `$captures variability due to sampling and pollster effects.
+
+### Posterior Distribution
+
+Using Bayes' theorem, the posterior distribution for ( d ) given the observed poll data $`( \bar{X} ) `$ can be computed. This posterior distribution informs us about the probability of ( d ) being greater than 0, indicating the likelihood of a candidate winning.
+
+## Practical Application
+
+Bayesian methods allow pollsters to update their forecasts as new polling data becomes available, combining prior beliefs (such as economic fundamentals) with observed data (poll results) to provide more nuanced and probabilistic election predictions.
+
+
+
+## Single Pollster Model
+
+### Observed Data Model
+
+Suppose we collect data from a single pollster with a sample size N, observing several measurements of the spread  $` (X_1, \ldots, X_J)`$. The theory suggests these random variables have:
+
+- **Expected value (d)**
+- **Standard error**$` ( \sigma = 2\sqrt{p(1 - p) / N} )`$
+
+We model the observed variability as:
+$` [ X_j = d + \epsilon_j ] `$
+where $` ( \epsilon_j ) `$ is a random variable representing poll-to-poll variability due to sampling error. It is assumed to have:
+- Mean = 0
+- Standard deviation = $` ( 2\sqrt{p(1 - p) / N} )`$
+
+For example, if ( d = 0.021 ) and the sample size ( N = 2000 ), we simulate ( J = 6 ) data points.
+
+## Multi-Pollster Model
+
+When we have ( J = 6 ) data points from ( I = 5 ) different pollsters, we introduce two indices: one for the pollster ((i)) and one for the polls ((j)). The model becomes:
+$`[ X_{i,j} = d + \epsilon_{i,j} ] `$
+
+### Adding Pollster Effect
+
+To account for pollster-to-pollster variability, we introduce a house effect ( h_i ) for the (i)-th pollster. The updated model is:
+$` [ X_{i,j} = d + h_i + \epsilon_{i,j} ]`$
+where $`( \epsilon_{i,j} ) `$ still has a mean of 0 and a standard deviation of $` ( 2\sqrt{p(1 - p) / N} ) `$. We assume ( h_i) has a standard deviation $` ( \sigma_h = 0.025 ) `$, with ( h_i ) common to all observations from the same pollster.
+
+### Modeling Election Bias
+
+Historically, each election has a general bias affecting all polls. This bias, ( b ), represents the difference between the average of all polls and the actual election result. We include this bias in our model as follows:
+$` [ X_{i,j} = d + b + h_i + \epsilon_{i,j} ]`$
+where ( b ) is a random variable with:
+- Expected value = 0
+- Standard deviation $` ( \sigma_b = 0.025 )`$
+
+This bias ( b ) is the same for all polls within a specific election year, making the $`  (X_{i,j} ) `$ measurements correlated.
+
+### Variance Considerations
+
+The standard deviation of ( X_{i,j} ) is now higher due to the additional variability from ( b ). The previous estimate did not account for ( b ):
+- The standard deviation of  $` ( \bar{X} )`$is given by:
+  $`[ \sqrt{\sigma^2 / N + \sigma_b^2} ]`$
+  
+Since ( b ) is common to all measurements, averaging does not reduce the variability introduced by ( b ). This is crucial: no matter how many polls you take, this bias does not get reduced.
+
+## Bayesian Calculation with Bias
+
+Incorporating the variability of ( b ) into the Bayesian calculation yields results much closer to those of FiveThirtyEight. The model adjustments account for both pollster effects and election-specific biases, providing a more accurate and robust prediction.
+###Forecasting
+Forecasters like to make predictions well before the election. The predictions are adapted as new polls come out. However, an important question forecasters must ask is: how informative are polls taken several weeks before the election about the actual election? Here we study the variability of poll results across time.
+
+
+## Model with Time-Varying Bias
+
+We enhance the previous polling model to include a bias term ( b_t ) that varies with time ( t ):
+
+ $`[ Y_{i,j,t} = d + b + h_j + b_t + \epsilon_{i,j,t} ]`$
+- ( Y_{i,j,t} ): Observed polling result from pollster ( i ), poll ( j ) at time ( t ).
+- ( d ): Parameter representing the election outcome.
+- ( b ): Bias common across all pollsters and polls.
+- ( h_j ): Pollster-specific bias.
+- ( b_t ): Time-varying bias, which changes with \( t \).
+- $`( \epsilon_{i,j,t} )`$: Error term capturing variability.
+
+The standard deviation of ( b_t ) is expected to decrease as ( t ) approaches election day, reflecting reduced uncertainty as polling nears the actual election result.
+
+## Incorporating Time Trends
+
+Pollsters often incorporate time trends ( f(t) ) into their models to capture evolving public sentiment:
+
+$`[ Y_{i,j,t} = d + b + h_j + b_t + f(t) + \epsilon_{i,j,t} ]`$
+- $`( f(t) )`$: Function representing the time trend in polling data, such as changes in candidate support percentages over time.
+
+These time trends are crucial for understanding shifts in voter preferences and adjusting forecasts accordingly as elections approach.
+
+![image](https://github.com/Zyadsowilam/Data-Science-Inference-and-Modeling/assets/96208685/f83140e7-8463-42b6-afd0-445bea104d27)
+
 # Tasks
 ### Task 1
 Write a line of code that calculates the standard error se of a sample average when you poll 25 people in the population. Generate a sequence of 100 proportions of Democrats p that vary from 0 (no Democrats) to 1 (all Democrats).
@@ -250,3 +409,183 @@ For example:
 
 data %>% group_by(variable_for_grouping)
 %>% filter(n() >= 5)
+### task 21
+Exercise 1 - Heights Revisited
+We have been using urn models to motivate the use of probability models. However, most data science applications are not related to data obtained from urns. More common are data that come from individuals. Probability plays a role because the data come from a random sample. The random sample is taken from a population and the urn serves as an analogy for the population.
+
+Let's revisit the heights dataset. For now, consider x to be the heights of all males in the data set. Mathematically speaking, x is our population. Using the urn analogy, we have an urn with the values of x in it.
+
+What are the population average and standard deviation of our population?
+
+Execute the lines of code that create a vector x that contains heights for all males in the population.
+Calculate the average of x.
+Calculate the standard deviation of x.
+### task 22
+
+Exercise 2 - Sample the population of heights
+Call the population average computed above mu
+ and the standard deviation sigma
+. Now take a sample of size 50, with replacement, and construct an estimate for 
+  mu and sigma
+### task 23
+Exercise 4 - Confidence Interval Calculation
+We will use bar X as our estimate of the heights in the population from our sample size N . We know from previous exercises that the standard estimate of our error  bar x - meu is sigma/sqrt(N).Construct a 95% confidence interval for meu
+###task 25
+Exercise 5 - Monte Carlo Simulation for Heights
+Now run a Monte Carlo simulation in which you compute 10,000 confidence intervals as you have just done. What proportion of these intervals include meu
+### task 26
+Exercise 6 - Visualizing Polling Bias
+In this section, we used visualization to motivate the presence of pollster bias in election polls. Here we will examine that bias more rigorously. Lets consider two pollsters that conducted daily polls and look at national polls for the month before the election.
+
+Is there a poll bias? Make a plot of the spreads for each poll.
+
+### task 26
+ Compute the Estimates
+The answer to the previous question depends on sigma 1 and sigma 2 , which we don't know. We learned that we can estimate these values using the sample standard deviation.Compute the estimates of sigma 1 and sigma 2 .
+### task 27
+Exercise 15 - Calculate the 95% Confidence Interval of the Spreads
+We have constructed a random variable that has expected value b2-b1, the pollster bias difference. If our model holds, then this random variable has an approximately normal distribution. The standard error of this random variable depends on sima1 and sigma2, but we can use the sample standard deviations we computed earlier. We have everything we need to answer our initial question: is b2-b1 different from 0?
+Construct a 95% confidence interval for the difference b2 and b1 . Does this interval contain zero?
+
+### task 28 
+Exercise 16 - Calculate the P-value
+The confidence interval tells us there is relatively strong pollster effect resulting in a difference of about 5%. Random variability does not seem to explain it.
+
+Compute a p-value to relay the fact that chance does not explain the observed pollster effect.
+### task 29
+
+Exercise 17 - Comparing Within-Poll and Between-Poll Variability
+We compute statistic called the t-statistic by dividing our estimate of  b2-b1
+ by its estimated standard error:
+(Y2 hat - Y1 hat)/(sqrt((s2^2/N2)+(s1^2/N1)))
+ 
+Later we learn will learn of another approximation for the distribution of this statistic for values of N2 and N1that aren't large enough for the CLT.
+
+Note that our data has more than two pollsters. We can also test for pollster effect using all pollsters, not just two. The idea is to compare the variability across polls to variability within polls. We can construct statistics to test for effects and approximate their distribution. The area of statistics that does this is called Analysis of Variance or ANOVA. We do not cover it here, but ANOVA provides a very useful set of tools to answer questions such as: is there a pollster effect?
+
+Compute the average and standard deviation for each pollster and examine the variability across the averages and how it compares to the variability within the pollsters, summarized by the standard deviation.
+### task 30
+Exercise 2 - Recalculating the SIDS Statistics
+Let's assume that there is in fact a genetic component to SIDS and the the probability of Pr(second case of SIDS | first case of SIDS)=1/100, is much higher than 1 in 8,500.
+
+What is the probability of both of Sally Clark's sons dying of SIDS?
+### task 31
+Assume that the probability of a murderer finding a way to kill her two children without leaving evidence of physical harm is:
+Pr(two children found dead with no evidencee of harm |mother is murder)=0.50
+
+Assume that the murder rate among mothers is 1 in 1,000,000.
+
+Pr(mother is murder)=1/1000000
+According to Bayes' rule, what is the probability of:
+Pr(two children found dead with no evidencee of harm |mother is murder)
+### task 32
+Florida is one of the most closely watched states in the U.S. election because it has many electoral votes and the election is generally close. Create a table with the poll spread results from Florida taken during the last days before the election using the sample code.
+
+The CLT tells us that the average of these spreads is approximately normal. Calculate a spread average and provide an estimate of the standard error.
+
+### task 32
+Estimate the Posterior Distribution
+The CLT tells us that our estimate of the spread 
+ has a normal distribution with expected value 
+ and standard deviation 
+, which we calculated in a previous exercise.
+
+Use the formulas for the posterior distribution to calculate the expected value of the posterior distribution if we set meu and tao
+
+### task 33
+Exercise 1 - Confidence Intervals of Polling Data
+For each poll in the polling data set, use the CLT to create a 95% confidence interval for the spread. Create a new table called cis that contains columns for the lower and upper limits of the confidence intervals.
+
+### task 33
+standard Error of the Posterior Distribution
+Compute the standard error of the posterior distribution.
+
+### task 34
+Constructing a Credible Interval
+Using the fact that the posterior distribution is normal, create an interval that has a 95% of occurring centered at the posterior expected value. Note that we call these credible intervals.
+
+
+### task 35
+Odds of Winning Florida
+According to this analysis, what was the probability that Trump wins Florida?
+### task 36
+Change the Priors
+We had set the prior variance tao to 0.01, reflecting that these races are often close.
+Change the prior variance to include values ranging from 0.005 to 0.05 and observe how the probability of Trump winning Florida changes by making a plot.
+### task 37
+Confidence Intervals of Polling Data
+For each poll in the polling data set, use the CLT to create a 95% confidence interval for the spread. Create a new table called cis that contains columns for the lower and upper limits of the confidence intervals.
+### task 38
+Compare to Actual Results
+You can add the final result to the cis table you just created using the left_join function as shown in the sample code.
+
+Now determine how often the 95% confidence interval includes the actual result.
+###task 39
+Stratify by Pollster and Grade
+Now find the proportion of hits for each pollster. Show only pollsters with at least 5 polls and order them from best to worst. Show the number of polls conducted by each pollster and the FiveThirtyEight grade of each pollster.
+### task 40
+tratify by State
+Repeat the previous exercise, but instead of pollster, stratify by state. Here we can't show grades.
+### task 41
+lotting Prediction Results
+Make a barplot based on the result from the previous exercise.
+### task 42
+Predicting the Winner
+Even if a forecaster's confidence interval is incorrect, the overall predictions will do better if they correctly called the right winner.
+
+Add two columns to the cis table by computing, for each poll, the difference between the predicted spread and the actual spread, and define a column hit that is true if the signs are the same.
+### task 43
+Plotting Prediction Results
+Create an object called p_hits that contains the proportion of instances when the sign of the actual spread matches the predicted spread for states with 5 or more polls.
+
+Make a barplot based on the result from the previous exercise that shows the proportion of times the sign of the spread matched the actual result for the data in p_hits.
+
+###task 44
+Plotting the Errors
+In the previous graph, we see that most states' polls predicted the correct winner 100% of the time. Only a few states polls' were incorrect more than 25% of the time. Wisconsin got every single poll wrong. In Pennsylvania and Michigan, more than 90% of the polls had the signs wrong.
+
+Make a histogram of the errors. What is the median of these errors?
+### task 45
+Plot Bias by State
+We see that, at the state level, the median error was slightly in favor of Clinton. The distribution is not centered at 0, but at 0.037. This value represents the general bias we described in an earlier section.
+
+Create a boxplot to examine if the bias was general to all states or if it affected some states differently. Filter the data to include only pollsters with grades B+ or higher.
+### task 46
+Filter Error Plot
+Some of these states only have a few polls. Repeat the previous exercise to plot the errors for each state, but only include states with five good polls or more
+### task 47
+sing the t-Distribution
+We know that, with a normal distribution, only 5% of values are more than 2 standard deviations away from the mean.
+
+Calculate the probability of seeing t-distributed random variables being more than 2 in absolute value when the degrees of freedom are 3.
+### task 48
+Exercise 2 - Plotting the t-distribution
+Now use sapply to compute the same probability for degrees of freedom from 3 to 50.
+
+Make a plot and notice when this probability converges to the normal distribution's 5%.
+
+### task 49
+ampling From the Normal Distribution
+In a previous section, we repeatedly took random samples of 50 heights from a distribution of heights. We noticed that about 95% of the samples had confidence intervals spanning the true population mean.
+Re-do this Monte Carlo simulation, but now instead of N=50,N=15 use . Notice what happens to the proportion of hits.
+### task 50
+ Sampling from the t-Distribution
+ N=15 is not that big. We know that heights are normally distributed, so the t-distribution should apply. Repeat the previous Monte Carlo simulation using the t-distribution instead of using the normal distribution to construct the confidence intervals.
+
+What are the proportion of 95% confidence intervals that span the actual mean height now?
+### task 51
+Comparing Proportions of Hits
+In a previous exercise, we determined whether or not each poll predicted the correct winner for their state in the 2016 U.S. presidential election. Each poll was also assigned a grade by the poll aggregator. Now we're going to determine if polls rated A- made better predictions than polls rated C-.
+
+In this exercise, filter the errors data for just polls with grades A- and C-. Calculate the proportion of times each grade of poll predicted the correct winner.
+### task 52
+Chi-squared Test
+We found that the A- polls predicted the correct winner about 80% of the time in their states and C- polls predicted the correct winner about 86% of the time.
+
+Use a chi-squared test to determine if these proportions are different.
+### task 53
+Odds Ratio Calculation
+It doesn't look like the grade A- polls performed significantly differently than the grade C- polls in their states.
+
+Calculate the odds ratio to determine the magnitude of the difference in performance between these two grades of polls.
+### task 54

@@ -144,7 +144,14 @@ $` [
       ] `$
      
     - For example, for $`( \alpha = 0.05 ) `$ , $`( 1 - \alpha / 2 = 0.975 )  `$ and we get the 1.96 value used earlier.
+#  p-Values
+The p-value is the probability of observing a value as extreme or more extreme than the result given that the null hypothesis is true.
 
+In the context of the normal distribution, this refers to the probability of observing a Z-score whose absolute value is as high or higher than the Z-score of interest.
+Suppose we want to find the p-value of an observation 2 standard deviations larger than the mean.raphically, the p-value gives the probability of an observation that's at least as far away from the mean or further.
+This plot shows a standard normal distribution (centered at Z=0  with a standard deviation of 1). The shaded tails are the region of the graph that are 2 standard deviations or more away from the mean.
+![image](https://github.com/Zyadsowilam/Data-Science-Inference-and-Modeling/assets/96208685/d859eb70-c743-48ab-a013-f2d51318e276)
+The right tail can be found with 1-pnorm(2). We want to have both tails, though, because we want to find the probability of any observation as far away from the mean or farther, in either direction. (This is what's meant by a two-tailed p-value.) Because the distribution is symmetrical, the right and left tails are the same size and we know that our desired value is just 2*(1-pnorm(2)).o find p-values for a given z-score z in a normal distribution with mean mu and standard deviation sigma, use 2*(1-pnorm(z, mu, sigma)) instead.
 
 # Tasks
 ### Task 1
@@ -177,3 +184,40 @@ Make a qq-plot of the errors you generated previously to see if the follow a nor
 If p=0.5 and N=100 use the central limit theorem to estimate the prop that x_hat > 0.5 use pnorm to define the prob that a value will be greater than 0.5
 ### task 12
 Assume you are in a practical situation and you don't know p take a sample size of N = 100 and obtain a sample average of bar x =0.51 what is the CT approximation for the probability that your error size is equal or larger than 0.01 calculate the standard error of the sample average using the sqrt func and use pnorm twice to define the probabilities that a value will be less than -0.01 and greater than 0.01 and combine these results to calculate the probability that the error size will be 0.01 or larger
+###task 13
+for the following exercise we will use actual poll data from 2016 election.The exercise will contain pre-loaded data from the dslabs package.libirary(dslabs) data("polls_us_election_2016")
+We will use all the national polls that ended within a few weeks before the election. Assume there are only two candidates and construct 95% confidence interval for the election night proportion p. Use filter to subtract the data set for the poll data you want..include polls that ended on or after 31,2016 enddadte only include polls that took place in the united states. Call this filtered object detector polls.use nrow to make sure you created a filtered object polls that contains the correct number of rows. Extract the sample size N from the first poll in your sunset object polls. Convert percentage of Clinton voters (rawpoll_clinton) from the first poll in polls to a proportion, x_hat print this value to the console m find the standard error of x_hat given N. Print this result.calculate the 95% confidence interval of this estimate using qmorm function. Save lower and upper confidence intervals as an object called ci. Save lower confidence interval first
+### task 14
+Create a new object called pollster_results that contains the pollster's name the end date of the poll the proportion of voters who declared vote for Clinton the standard error of this estimate and the lower and upper bounds of the confidence intervals for the estimate.use the mutate func to define four new col X_hat se_hat lower upper. temporarily add these to the polls object that has already been loaded for you.
+in the X_hat column convert the raw poll results for Clinton to a proportion. In the se_hat column calculate the standard error of X_hatbfor each poll using sqrt func. In the lower column calculate the lower bond of the 95% confidence using qnorm and in the upper column calculate the upper bond 95% confidence interval using qnorm . Use select func to select the column polls to save to the new object pollster_results
+### task 15
+The finally tally for the popular vote was Clinton 48.2% and Trump 46.1% add a column called hit to pollster_results that states if the confidence interval include the true proportion p= 0.428 or not. What proportion of confidence intervals included p?
+### task 16
+A much smaller proportion of the polls than expected produce confidence intervals containing p. Notice that most polls that fail to include p are underestimating. The rationale for this main candidates on election day. In this case it's more information to estimate the spread or the difference between the proportion of two candidates d or 0.482-0.461=0.021 for this election. Assume that there are only two parties and thar d =2p-1 construct a 95% confidence interval for difference in proportions on election night.
+### task 17
+Create a new object called pollster_results that contains the pollster's name, the end date of the poll, the difference in the proportion of voters who declared a vote either, and the lower and upper bounds of the confidence interval for the estimate.
+### task 18
+What proportion of confidence intervals for the difference between the proportion of voters included
+, the actual difference in election day?
+
+Use the mutate function to define a new variable within pollster_results called hit.
+Use logical expressions to determine if each values in lower and upper span the actual difference in proportions of voters.
+Use the mean function to determine the average value in hit and summarize the results using summarize.
+Save the result of your entire line of code as an object called avg_hit
+### task 19
+Comparing to actual results by pollster
+Although the proportion of confidence intervals that include the actual difference between the proportion of voters increases substantially, it is still lower that 0.95. In the next chapter, we learn the reason for this.
+
+To motivate our next exercises, calculate the difference between each poll's estimate
+and the actual
+. Stratify this difference, or error, by pollster in a plot.
+### task 20
+pollster - multiple polls
+Remake the plot you made for the previous exercise, but only for pollsters that took five or more polls.
+
+You can use dplyr tools group_by and n to group data by a variable of interest and then count the number of observations in the groups. The function filter filters data piped into it by your specified condition.
+
+For example:
+
+data %>% group_by(variable_for_grouping)
+%>% filter(n() >= 5)

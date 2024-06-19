@@ -180,6 +180,7 @@ Given a sample $`( X_1, X_2, \ldots, X_N ) `$ drawn from the urn:
 - Unlike the population standard deviation formula, we divide by ( N-1 ) to correct bias and obtain a better estimate ( s ) of $` ( \sigma )`$ .
 
 
+![image](https://github.com/Zyadsowilam/Data-Science-Inference-and-Modeling/assets/96208685/f1b17fa1-32d5-4cf6-bc99-616b5d4b55ae)
 
 # Tasks
 ### Task 1

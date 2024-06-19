@@ -153,6 +153,34 @@ This plot shows a standard normal distribution (centered at Z=0  with a standard
 ![image](https://github.com/Zyadsowilam/Data-Science-Inference-and-Modeling/assets/96208685/d859eb70-c743-48ab-a013-f2d51318e276)
 The right tail can be found with 1-pnorm(2). We want to have both tails, though, because we want to find the probability of any observation as far away from the mean or farther, in either direction. (This is what's meant by a two-tailed p-value.) Because the distribution is symmetrical, the right and left tails are the same size and we know that our desired value is just 2*(1-pnorm(2)).o find p-values for a given z-score z in a normal distribution with mean mu and standard deviation sigma, use 2*(1-pnorm(z, mu, sigma)) instead.
 
+
+## Data-driven models
+
+The model treats the data as if it were drawn from an urn containing continuous values between -1 and 1. This differs from a traditional urn model with binary outcomes (0s and 1s). Here, the expected value of interest, denoted as ( d ), relates to the spread of the poll results.
+
+## Parameters of Interest
+
+In this urn model, two key parameters are of interest:
+
+- **Expected Value (d)**: Represents the actual spread, defined as ( d = 2p - 1 ).
+- **Standard Deviation $` ((\sigma))`$**: Reflects the variability across different pollsters and sampling variability from polling.
+
+## Statistical Estimation
+
+### Estimating ( d )
+
+Given a sample $`( X_1, X_2, \ldots, X_N ) `$ drawn from the urn:
+- The Central Limit Theorem (CLT) suggests that for a sufficiently large sample size ( N ), the sample average $` \bar{X}`$ approximates a normal distribution with expected value \( \mu \) and standard error \( \sigma / \sqrt{N} \).
+- This allows construction of confidence intervals for ( d ).
+
+### Estimating \( \sigma \)
+
+- The standard deviation \( \sigma \) is unknown but can be estimated using the sample standard deviation ( s ).
+- $`( s = \sqrt{\sum_{i=1}^{N} (X_i - \bar{X})^2 / (N-1)} ) `$ provides an estimate of$` ( \sigma ) `$ .
+- Unlike the population standard deviation formula, we divide by ( N-1 ) to correct bias and obtain a better estimate ( s ) of $` ( \sigma )`$ .
+
+
+
 # Tasks
 ### Task 1
 Write a line of code that calculates the standard error se of a sample average when you poll 25 people in the population. Generate a sequence of 100 proportions of Democrats p that vary from 0 (no Democrats) to 1 (all Democrats).
